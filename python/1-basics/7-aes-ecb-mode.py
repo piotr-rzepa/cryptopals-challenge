@@ -1,14 +1,9 @@
 import pathlib
 import base64
-from typing import LiteralString, Generator
+from typing import LiteralString
 from Crypto.Cipher import AES
 
 AES128_ECB_KEY: LiteralString = "YELLOW SUBMARINE"
-
-
-def split_into_chunks(content: bytes, chunk_size: int) -> Generator[bytes, None, None]:
-    for i in range(0, len(content), chunk_size):
-        yield content[i : i + chunk_size]
 
 
 def main() -> None:

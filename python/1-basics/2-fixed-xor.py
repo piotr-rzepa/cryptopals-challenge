@@ -1,13 +1,11 @@
 import binascii
 from typing import LiteralString
 
+from utils import test_output
+
 INPUT: LiteralString = "1c0111001f010100061a024b53535009181c"
 XOR_VALUE: LiteralString = "686974207468652062756c6c277320657965"
 EXPECTED_OUTPUT: LiteralString = "746865206b696420646f6e277420706c6179"
-
-
-def test_output(output: bytes) -> None | AssertionError:
-    assert output == EXPECTED_OUTPUT.encode()
 
 
 def main() -> None:
@@ -23,7 +21,7 @@ def main() -> None:
     print(f"Script output (str): {output}")
     print(f"Script output (hex): {output_hex}")
 
-    test_output(output_hex)
+    test_output(output_hex, EXPECTED_OUTPUT.encode())
 
 
 if __name__ == "__main__":

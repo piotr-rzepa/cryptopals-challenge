@@ -1,16 +1,9 @@
 import pathlib
 import binascii
-from typing import Generator, List
+from typing import List, Tuple
+from utils import split_into_chunks, has_duplicates
 
-
-def has_duplicates(lst: List) -> bool:
-    n = max(set(lst), key=lst.count)
-    return lst.count(n) > 1
-
-
-def split_into_chunks(content: bytes, chunk_size: int) -> Generator[bytes, None, None]:
-    for i in range(0, len(content), chunk_size):
-        yield content[i : i + chunk_size]
+CHUNK_SIZE: int = 16
 
 
 def main() -> None:
@@ -21,17 +14,15 @@ def main() -> None:
         binascii.unhexlify(x) for x in hex_encoded_file_content_lines
     ]
 
-    candidates = []
+    candidates: List[Tuple[int, bytes]] = []
 
     for idx, x in enumerate(decoded_file_content_lines_bytes):
-        print(f"Splitting {idx} string into chunks...")
-        chunked = list(split_into_chunks(x, 16))
-        for i, c in enumerate(chunked):
-            print(f"Index: {i}, chunk: {c}")
+        chunked = list(split_into_chunks(x, CHUNK_SIZE))
         if has_duplicates(chunked):
             candidates.append((idx, x))
 
-    print(candidates)
+    for idx, candidate in candidates:
+        print(f"Candidate: {candidate} at line: {idx}")
 
 
 if __name__ == "__main__":
