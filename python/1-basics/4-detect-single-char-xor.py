@@ -8,6 +8,20 @@ INPUT: LiteralString = (
 
 
 def detect_single_char_xor(input: str) -> Tuple[int, float, bytes]:
+    """Detects a single character used for encrypting the input using XOR.
+
+    This function accepts input as string (as opposed to the same function from utils,
+    which accepts bytes) - the reason is that when passing the input as bytes,
+    the function would return a wrong result with cryptopals data for this task.
+
+    Args:
+        input: Encrypted message using single character XOR, as string.
+
+    Returns:
+        Tuple containing the ASCII code of a potential character used for XOR,
+        a calculated score and a result after decrypting the messages using inverted
+        XOR with the same character.
+    """
     input_hex_decoded = bytes.fromhex(input)
     result: List[Tuple[int, float, bytes]] = []
     for i in range(256):

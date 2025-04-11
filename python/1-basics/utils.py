@@ -38,6 +38,16 @@ ENGLISH_LETTERS_FREQS: Dict[str, float] = {
 def score_function(
     input: bytes, freq_dict: Dict[str, float] = ENGLISH_LETTERS_FREQS
 ) -> float:
+    """Calculates letter frequency of a given word, passed as bytes.
+
+    Args:
+        input: Word to calculate character frequency for, in bytes.
+        freq_dict: base frequencies for each english letter as a dict.
+
+    Returns:
+        Float value denoting a score value, based on letter frequency, of a given word.
+
+    """
     word_freqs = {lt: 0.0 for lt in freq_dict.keys()}
 
     for w in input:
@@ -51,6 +61,16 @@ def score_function(
 
 
 def detect_single_char_xor(input: bytes) -> Tuple[int, float, bytes]:
+    """Detects a single character used for encrypting the input using XOR.
+
+    Args:
+        input: Encrypted message using single character XOR, in bytes.
+
+    Returns:
+        Tuple containing the ASCII code of a potential character used for XOR,
+        a calculated score and a result after decrypting the messages using inverted
+        XOR with the same character.
+    """
     result: List[Tuple[int, float, bytes]] = []
     for i in range(256):
         xor_output_bytes = bytes([x ^ i for x in input])
@@ -64,11 +84,28 @@ def detect_single_char_xor(input: bytes) -> Tuple[int, float, bytes]:
 
 
 def binary_representation(utf_8_bytes: bytes) -> str:
+    """Converts UTF-8 encoded bytes to binary string representation.
+
+    Args:
+        utf_8_bytes: UTF-8 encoded bytes input.
+
+    Returns:
+        Binary string representation of a UTF-8 encoded bytes input.
+    """
     return "".join(f"{x:08b}" for x in utf_8_bytes)
 
 
 # I'm using the following principle - for binary strings a and b the Hamming distance is equal to the number of ones (population count) in a XOR b.
 def calculate_hamming_distance(str1: bytes, str2: bytes) -> int:
+    """Calculates Hamming Distance between two bytes blocks.
+
+    Args:
+        str1: First block, as a bytes input.
+        str2: Second block, as a bytes input.
+
+    Returns:
+        Integer value representing Hamming Distance between two bytes blocks.
+    """
     first_as_bin, second_as_bin = (
         binary_representation(str1),
         binary_representation(str2),
@@ -79,6 +116,15 @@ def calculate_hamming_distance(str1: bytes, str2: bytes) -> int:
 
 
 def find_shortest_distance(content: bytes, key_size_range: range) -> Tuple[int, float]:
+    """Finds the smallest Hamming Distance across the chunked content.
+
+    Args:
+        content: Input in bytes, which will be split into multiple chunks.
+        key_size_range: range of values representig size of the chunk to use when calculating Hamming Distance.
+
+    Returns:
+        Tuple with integer value being a key size used for chunking and a float being the smallest calculated hamming distance.
+    """
     best_candidate = (0, math.inf)
     for key_size in key_size_range:
         chunks = [content[i : i + key_size] for i in range(0, len(content), key_size)]
@@ -97,14 +143,40 @@ def find_shortest_distance(content: bytes, key_size_range: range) -> Tuple[int, 
 
 
 def has_duplicates(lst: List) -> bool:
+    """Checks a list for duplicate elements.
+
+    Args:
+        lst: List of elements to check for duplicates.
+
+    Returns:
+        True if a list contains duplicates, False otherwise.
+    """
     n = max(set(lst), key=lst.count)
     return lst.count(n) > 1
 
 
 def split_into_chunks(content: bytes, chunk_size: int) -> Generator[bytes, None, None]:
+    """Splits the bytes content into multiple chunks of a given size.
+
+    Args:
+        content: Content in bytes, which should be split into multiple chunks.
+        chunk_size: Size of the chunk to be used for splitting the content.
+
+    Yields:
+        Iterator containing the next chunk of the splitted content.
+    """
     for i in range(0, len(content), chunk_size):
         yield content[i : i + chunk_size]
 
 
 def test_output(output: bytes, expected_output: bytes) -> None | AssertionError:
+    """Verifies output against an expected output.
+
+    Args:
+        output: An output which should be verified, in bytes.
+        expected_output: An expected output, against which the user output will be verified, in bytes.
+
+    Returns:
+        None if there is no difference between output and expected output, AssertionError othwerise.
+    """
     assert output == expected_output
