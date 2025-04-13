@@ -1,13 +1,12 @@
-from typing import LiteralString, List, Tuple
+from typing import List, Tuple
 from utils import score_function
+import binascii
 
-INPUT: LiteralString = (
-    "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
-)
+INPUT: bytes = b"1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
 
 
 def main() -> None:
-    input_hex_decoded = bytes.fromhex(INPUT)
+    input_hex_decoded = binascii.unhexlify(INPUT)
 
     result: List[Tuple[int, float, bytes]] = []
     for i in range(256):
