@@ -1,4 +1,4 @@
-from typing import Generator
+from typing import Generator, List
 from Crypto.Cipher import AES
 
 
@@ -14,8 +14,6 @@ def add_pkcs7_padding(block: bytes, block_len: int) -> bytes:
     Returns:
         Bytes block of a given length with added padding.
     """
-    assert block_len >= len(block)
-
     padding_len = block_len - len(block)
     if padding_len == 0:
         return block
@@ -101,6 +99,19 @@ def cbc_decrypt(ciphertext: bytes, decryption_key: bytes, init_vector: bytes) ->
         previous_block = chunk
         plaintext.extend(xored)
     return bytes(plaintext)
+
+
+def has_duplicates(lst: List[bytes]) -> bool:
+    """Checks a list for duplicate elements.
+
+    Args:
+        lst: List of elements to check for duplicates.
+
+    Returns:
+        True if a list contains duplicates, False otherwise.
+    """
+    n = max(set(lst), key=lst.count)
+    return lst.count(n) > 1
 
 
 def test_output(output: bytes, expected_output: bytes) -> None | AssertionError:
